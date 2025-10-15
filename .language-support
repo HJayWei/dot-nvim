@@ -1,0 +1,8 @@
+# Language Support Configuration
+PYTHON=true
+NODEJS=true
+GO=true
+RUST=true
+PHP=true
+LUA=true
+RSYNC=true

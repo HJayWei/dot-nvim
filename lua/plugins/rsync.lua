@@ -1,3 +1,11 @@
+-- Only load rsync plugin if rsync is available
+local lang_support = require("utils.language-support")
+
+-- Check if rsync is available
+if not lang_support.has_rsync() then
+  return {}
+end
+
 return {
   {
     "OscarCreator/rsync.nvim",

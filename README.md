@@ -9,11 +9,13 @@ This configuration extends LazyVim with custom options, keymaps, and carefully s
 ## ✨ Features
 
 ### 🎨 Theme & UI
+
 - **Color Scheme**: Catppuccin Frappé theme
 - **Neovide Support**: Optimized settings for Neovide GUI including transparency, cursor effects, and clipboard integration
 - **Line wrapping** enabled with visual column guide at 120 characters
 
 ### 🔧 Core Enhancements
+
 - **Shell**: Configured to use `/bin/zsh`
 - **Custom Keymaps**:
   - `Ctrl+Q`: Quick quit file
@@ -24,45 +26,60 @@ This configuration extends LazyVim with custom options, keymaps, and carefully s
 ### 📦 Additional Plugins
 
 #### Development Tools
+
 - **vim-dadbod-ui**: Database management interface with completion support
-- **rsync.nvim**: File synchronization with remote servers (sync on save enabled)
-- **mason-tool-installer**: Auto-installs and manages LSP servers, formatters, and linters
+- **rsync.nvim**: File synchronization with remote servers (conditionally loaded if rsync is installed)
+- **mason-tool-installer**: Auto-installs and manages LSP servers, formatters, and linters based on available languages
 
 #### Git Integration
+
 - **diffview.nvim**: Enhanced git diff viewing
 - **git-conflict.nvim**: Interactive conflict resolution
 
 #### Editor Enhancements
+
 - **vim-visual-multi**: Multiple cursor support (`Ctrl+N` to find next)
 - **mini-surround**: Efficient surround text operations
 - **nvim-cmp**: Code completion
 
 #### File Management
+
 - **snacks_explorer**: File explorer
 - **snacks_picker**: Fuzzy finder
 
 ### 🌐 Language Support
 
+This configuration uses **dynamic language detection** to install only the tools for languages that are available in the Docker container.
+
+#### Language Detection Mechanism
+
+- **Marker File**: `~/.language-support` created during Docker build
+- **Utility**: `lua/utils/language-support.lua` reads language availability
+- **Conditional Loading**: Tools are only installed for enabled languages
+
 #### Configured Language Servers & Tools
-- **PHP**: Intelephense, PHP Debug Adapter, Pint
-- **Rust**: rust-analyzer, CodeLLDB
-- **JavaScript/TypeScript**: vtsls, JS Debug Adapter, Prettier
-- **Vue**: Vetur VLS
-- **Golang**: golangci-lint, gopls, delve, goimports, go-debug-adapter
-- **Lua**: lua-language-server, StyLua
-- **Bash**: bash-language-server, shellcheck, shfmt
-- **JSON**: json-lsp
-- **Markdown**: Marksman, markdown-toc, markdownlint-cli2
+
+Tools are conditionally installed based on language availability:
+
+- **PHP** (if enabled): Intelephense, PHP Debug Adapter, Pint
+- **Rust** (if enabled): rust-analyzer, CodeLLDB
+- **JavaScript/TypeScript** (if Node.js enabled): vtsls, JS Debug Adapter, Prettier, Vetur VLS (Vue)
+- **Go** (if enabled): golangci-lint, gopls, delve, goimports, gofumpt, go-debug-adapter
+- **Lua** (if enabled): lua-language-server, StyLua
+- **Always installed**: bash-language-server, json-lsp, shellcheck, shfmt, markdown tools
 
 #### Treesitter Parsers
+
 Installed parsers: `c`, `lua`, `vim`, `vimdoc`, `javascript`, `typescript`, `tsx`, `json`, `html`, `css`, `bash`, `query`, `markdown`, `markdown_inline`, `blade`, `go`, `php`, `scss`, `vue`, `tmux`, `sql`, `rust`
 
 ### 🎯 Custom Treesitter Queries
+
 - **Blade template support**: Custom syntax highlighting and injections for Laravel Blade templates
 
 ## 📚 LazyVim Extras
 
 This configuration includes the following LazyVim extras:
+
 - `coding.mini-surround`
 - `coding.nvim-cmp`
 - `editor.snacks_explorer`
@@ -77,6 +94,7 @@ This configuration includes the following LazyVim extras:
 ## 🚀 Installation
 
 1. **Backup your existing Neovim configuration** (if any):
+
    ```bash
    mv ~/.config/nvim ~/.config/nvim.backup
    mv ~/.local/share/nvim ~/.local/share/nvim.backup
@@ -85,11 +103,13 @@ This configuration includes the following LazyVim extras:
    ```
 
 2. **Clone this repository**:
+
    ```bash
    git clone https://github.com/HJayWei/dot-nvim.git ~/.config/nvim
    ```
 
 3. **Start Neovim**:
+
    ```bash
    nvim
    ```
@@ -100,29 +120,32 @@ This configuration includes the following LazyVim extras:
 
 ```
 .
-├── init.lua                    # Entry point
+├── init.lua                          # Entry point
 ├── lua/
 │   ├── config/
-│   │   ├── autocmds.lua       # Auto commands
-│   │   ├── keymaps.lua        # Custom keymaps
-│   │   ├── lazy.lua           # Lazy.nvim bootstrap
-│   │   ├── neovide.lua        # Neovide-specific settings
-│   │   └── options.lua        # Editor options
-│   └── plugins/
-│       ├── dadbod.lua         # Database UI
-│       ├── diffview.lua       # Git diff viewer
-│       ├── extra-treesitter.lua   # Additional parsers
-│       ├── git-conflict.lua   # Conflict resolution
-│       ├── lsp.lua            # LSP configurations
-│       ├── mason-tool-installer.lua  # Tool installer
-│       ├── multi-cursor.lua   # Multiple cursors
-│       ├── rsync.lua          # File sync
-│       └── theme.lua          # Color scheme
+│   │   ├── autocmds.lua              # Auto commands
+│   │   ├── keymaps.lua               # Custom keymaps
+│   │   ├── lazy.lua                  # Lazy.nvim bootstrap
+│   │   ├── neovide.lua               # Neovide-specific settings
+│   │   └── options.lua               # Editor options
+│   ├── plugins/
+│   │   ├── dadbod.lua                # Database UI
+│   │   ├── diffview.lua              # Git diff viewer
+│   │   ├── extra-treesitter.lua      # Additional parsers
+│   │   ├── git-conflict.lua          # Conflict resolution
+│   │   ├── lsp.lua                   # LSP configurations
+│   │   ├── mason-tool-installer.lua  # Dynamic tool installer
+│   │   ├── multi-cursor.lua          # Multiple cursors
+│   │   ├── rsync.lua                 # File sync (conditional)
+│   │   └── theme.lua                 # Color scheme
+│   └── utils/
+│       ├── language-support.lua      # Language detection utility
+│       └── README.md                 # Utils documentation
 ├── after/
 │   └── queries/
-│       └── blade/             # Blade template queries
-├── lazyvim.json               # LazyVim extras configuration
-└── stylua.toml                # Lua formatter config
+│       └── blade/                    # Blade template queries
+├── lazyvim.json                      # LazyVim extras configuration
+└── stylua.toml                       # Lua formatter config
 ```
 
 ## 🔨 Customization

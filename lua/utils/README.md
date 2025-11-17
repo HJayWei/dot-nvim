@@ -144,9 +144,9 @@ end
 
 The utility checks for the language support file in the following order:
 
-1. `~/.config/nvim/.language-support` (new location, recommended)
-2. `~/.language-support` (old location, for backward compatibility)
-3. If neither exists (e.g., old Docker images), all languages are assumed to be available
+1. `~/.config/nvim/.language-support`
+2. `~/.language-support`
+3. If neither exists, all languages are assumed to be not available
 
 This ensures existing configurations continue to work seamlessly.
 

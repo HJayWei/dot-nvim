@@ -6,6 +6,10 @@ local M = {}
 -- Cache for language support status
 local language_cache = nil
 
+local function is_readable(path)
+  return vim.fn.filereadable(path) == 1
+end
+
 -- Read language support configuration from file
 function M.read_config()
   if language_cache then
@@ -18,24 +22,20 @@ function M.read_config()
     go = false,
     rust = false,
     php = false,
-    lua = false,
+    lua = true,
     rsync = false,
   }
 
   -- Try to read from nvim config directory first (new location)
-  local config_file = vim.fn.expand("~/.language-support")
+  local config_file = vim.fn.stdpath("config") .. "/.language-support"
 
   -- Fallback to old location if new location doesn't exist
-  if vim.fn.filereadable(config_file) == 0 then
-    config_file = vim.fn.stdpath("config") .. "/.language-support"
+  if not is_readable(config_file) then
+    config_file = vim.fn.expand("~/.language-support")
   end
 
-  -- Check if file exists
-  if vim.fn.filereadable(config_file) == 0 then
-    -- File doesn't exist, assume all languages are installed (backward compatibility)
-    for key, _ in pairs(config) do
-      config[key] = true
-    end
+  -- Check if file not exists
+  if not is_readable(config_file) then
     language_cache = config
     return config
   end
@@ -43,10 +43,6 @@ function M.read_config()
   -- Read file line by line
   local file = io.open(config_file, "r")
   if not file then
-    -- Can't read file, assume all languages installed
-    for key, _ in pairs(config) do
-      config[key] = true
-    end
     language_cache = config
     return config
   end

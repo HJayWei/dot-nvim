@@ -1,10 +1,24 @@
 return {
   {
+    "stevearc/conform.nvim",
+    opts = function(_, opts)
+      opts.formatters_by_ft = vim.tbl_extend("force", opts.formatters_by_ft or {}, {
+        php = { "pint" },
+      })
+      return opts
+    end,
+  },
+  {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
         intelephense = {
           root_markers = { "composer.json", ".git" },
+          settings = {
+            intelephense = {
+              format = { enable = false },
+            },
+          },
         },
         eslint = {
           root_dir = function(fname)

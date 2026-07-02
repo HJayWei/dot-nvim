@@ -23,7 +23,18 @@ return {
         eslint = {
           root_dir = function(fname)
             local util = require("lspconfig.util")
-            return util.root_pattern(
+
+            if type(fname) == "number" then
+              fname = vim.api.nvim_buf_get_name(fname)
+            elseif fname == nil or fname == "" then
+              fname = vim.api.nvim_buf_get_name(0)
+            end
+
+            if fname == nil or fname == "" then
+              fname = vim.loop.cwd()
+            end
+
+            local root = util.root_pattern(
               "eslint.config.js",
               "eslint.config.cjs",
               "eslint.config.mjs",
@@ -34,7 +45,9 @@ return {
               ".eslintrc.yml",
               ".eslintrc.yaml",
               "package.json"
-            )(fname) or util.find_git_ancestor(fname)
+            )(fname)
+
+            return root or util.find_git_ancestor(fname)
           end,
 
           settings = {
